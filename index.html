@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>ABC</title>
+    <style>
+        *{
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body{
+            min-height: 100vh;
+            display: grid;
+            place-items: center;
+            justify-content: space-around;
+            background-color: #F5F5F4;
+            
+        }
+        #letters, #input{
+            display: block;
+            letter-spacing: .5em;
+            font-family: monospace;
+            font-size: 3vw;
+            text-align:center;
+            
+            outline: none;
+            width: 80%;
+            text-transform: uppercase;
+            padding: 1em;
+            margin: 1em;
+            border-radius: 1vw;
+            border: none;
+            background-color: #829CBA;
+            color: white
+        }
+        #letters {
+            color: rgb(88, 67, 66);
+            background-color: #EDE3CC
+        }
+        
+    </style>
+</head>
+<body>    
+    <form>
+        <div id="letters"></div>
+        <input id="input" autocomplete="off" />
+    </form>
+    
+    <script>
+        let words;
+        let allLetters;
+        let availableLetters;
+        let usedLetters;
+        
+
+        function checkGuess(){
+            let validGuess = true
+            availableLetters = [... allLetters]
+            usedLetters = [];
+            const guess = document.getElementById("input").value.toUpperCase();
+            for(let i = 0; i < guess.length; i++){
+                let index = availableLetters.indexOf(guess[i])
+                if(index > -1){
+                    availableLetters.splice(index, 1)
+                    usedLetters.push(guess[i])
+                }else{
+                    validGuess = false
+                }
+            }
+            document.getElementById("letters").innerText = availableLetters.slice(0, 9).join("")
+            return validGuess
+        }
+
+        function shuffle(array) {
+            let currentIndex = array.length,  randomIndex;
+            while (currentIndex != 0) {
+                randomIndex = Math.floor(Math.random() * currentIndex);
+                currentIndex--;                
+                [array[currentIndex], array[randomIndex]] = [
+                array[randomIndex], array[currentIndex]];
+            }
+            return array;
+        }
+
+        async function checkWord(e){
+            e.preventDefault()
+            if(!words){
+                var data = await (await fetch("words2.txt")).text()
+                words = data.split("\n")
+            }
+            const guess = document.getElementById("input").value.toUpperCase();
+            console.log(guess, words)
+            if(checkGuess() && words.includes(guess)){
+                alert("SCORE:\t" + guess.length)
+            }else{
+                alert("Computer says noooo")
+            }
+        }
+
+        async function init(){
+            const vowels = {"A":7, "E":9, "I":4, "O":5, "U":3, "Y":2, "Æ":2, "Ø":2, "Å":2}
+            const consonants = { "B":4, "C":2, "D":5, "F":3, "G":3, "H":2, "J":2, "K":4, "L":5, "M":3, "N":7, "P":2, "Q":0, "R":7, "S":6, "T":6, "V":3, "W":0, "X":1, "Z":1}
+            
+            var arr1 = []
+            for(const letter in vowels){
+                for(let i = 0; i < vowels[letter]; i++) {
+                    arr1.push(letter)
+                }
+            }
+            var arr2 = []
+            for(const letter in consonants){
+                for(let i = 0; i < consonants[letter]; i++) {
+                    arr2.push(letter)
+                }
+            }
+            shuffle(arr1)
+            shuffle(arr2)
+            allLetters = [... arr1.slice(0, 4), ... arr2.slice(0, 5)]
+            
+            shuffle(allLetters)
+            checkGuess()
+            document.getElementById("input").oninput = e => checkGuess()
+            document.forms[0].onsubmit = checkWord            
+        }
+        
+        init()
+    </script>    
+</body>
+</html>
