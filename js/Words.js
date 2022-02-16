@@ -1,0 +1,6 @@
+export let wordList;
+export async function GetWordList() {
+    if (!wordList)
+        wordList = (await (await fetch("words.txt")).text()).split("\r\n");
+}
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiV29yZHMuanMiLCJzb3VyY2VSb290IjoiLi4vc3JjLyIsInNvdXJjZXMiOlsiV29yZHMudHMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUEsTUFBTSxDQUFDLElBQUksUUFBaUIsQ0FBQTtBQUU1QixNQUFNLENBQUMsS0FBSyxVQUFVLFdBQVc7SUFDN0IsSUFBRyxDQUFDLFFBQVE7UUFBRSxRQUFRLEdBQUcsQ0FBQyxNQUFNLENBQUMsTUFBTSxLQUFLLENBQUMsV0FBVyxDQUFDLENBQUMsQ0FBQyxJQUFJLEVBQUUsQ0FBQyxDQUFDLEtBQUssQ0FBQyxNQUFNLENBQUMsQ0FBQTtBQUNwRixDQUFDIn0=
